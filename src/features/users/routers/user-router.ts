@@ -1,6 +1,7 @@
 import { getRouter } from '../../../util/get-router';
 import { checkAuth } from '../../auth/util/check-auth';
 import createAttendanceOnEventHandler from '../route-handlers/create-attendance-on-event-handler';
+import deleteUserHandler from '../route-handlers/delete-user-handler';
 import { getActiveAttendanceHandler } from '../route-handlers/get-active-attendance-handler';
 import getAttendanceOnEventHandler from '../route-handlers/get-attendance-on-event-handler';
 import getEventTemplateByIdHandler from '../route-handlers/get-event-template-by-id-handler';
@@ -16,5 +17,6 @@ router.get('/:userId/attendance/:eventId', checkAuth, getAttendanceOnEventHandle
 
 router.put('/:userId/attendance/:eventId', checkAuth, updateAttendanceOnEventHandler);
 router.post('/:userId/attendance/:eventId', checkAuth, createAttendanceOnEventHandler);
+router.delete('/:userId', checkAuth, deleteUserHandler);
 
 export { router as userRouter };
