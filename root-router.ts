@@ -1,0 +1,5 @@
+import { getRouter } from './src/util/get-router';
+
+const router = getRouter();
+router.get('/', async (req, res) => res.status(200).send('Hello from root!'));
+export { router as rootRouter };
