@@ -23,6 +23,7 @@ app.use(
       } else if (
         origin === 'http://10.215.98.92:5173' ||
         origin === 'http://localhost:5173' ||
+        origin === 'https://localhost' ||
         origin === 'capacitor://localhost'
       ) {
         return callback(null, origin);
@@ -53,6 +54,7 @@ const io = new Server(server, {
       } else if (
         origin === 'http://10.215.98.92:5173' ||
         origin === 'http://localhost:5173' ||
+        origin === 'https://localhost' ||
         origin === 'capacitor://localhost'
       ) {
         return callback(null, origin);
