@@ -16,11 +16,11 @@ export async function patchSessionHandler(req: AuthenticatedUserRequest, res: Ex
 
     return res
       .status(200)
-      .cookie(authConfig.accessTokenName, token, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60,
-      })
-      .json(newSession);
+
+      .json({
+        token,
+        session: newSession,
+      });
   } catch (err: any) {
     console.log(err.message);
     return res.status(500).end();

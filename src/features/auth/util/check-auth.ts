@@ -12,7 +12,13 @@ export async function checkAuth(
   next: NextFunction
 ) {
   try {
-    const token = req.cookies[authConfig.accessTokenName];
+    const auth = req.headers.authorization;
+    console.log(auth);
+    if (!auth) {
+      return res.status(401).send('auth:unauthorized');
+    }
+
+    const token = auth.split(' ')[1]; //Bearer <token>
     if (!token) {
       return res.status(401).send('auth:unauthorized');
     }
