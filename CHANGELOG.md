@@ -1,3 +1,9 @@
+## [0.10.1] - 28-09-2025
+
+### Changed
+
+- Removed the auth-header console log.
+
 ## [0.10.0] - 27-09-2025
 
 ### Changed

@@ -13,7 +13,7 @@ export async function checkAuth(
 ) {
   try {
     const auth = req.headers.authorization;
-    console.log(auth);
+
     if (!auth) {
       return res.status(401).send('auth:unauthorized');
     }
