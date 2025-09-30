@@ -29,7 +29,6 @@ export async function getHandler(req: ExpressRequest, res: ExpressResponse) {
 export async function postHandler(req: ExpressRequest, res: ExpressResponse) {
   try {
     const credentials = req.body;
-    console.log(credentials);
     if (!credentials) return res.status(400).send('Credentials missing from request!');
 
     const parseResult = loginCredentialsSchema.safeParse(credentials);
@@ -64,9 +63,11 @@ export async function postHandler(req: ExpressRequest, res: ExpressResponse) {
         status: user.status,
         attended_event_id: pr?.event_instance_id || null,
         subscription: subscriptionRecord,
+        avg_rating: user.avg_rating,
       } satisfies TUser,
     };
 
+    console.log(session);
     const token = createJWT(session, {
       expiresIn: '1h',
     });

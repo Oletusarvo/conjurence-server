@@ -47,6 +47,7 @@ export async function checkAuth(
         username: decodedToken.user.username,
         subscription: decodedToken.user.subscription,
         attended_event_id: decodedToken.user.attended_event_id,
+        avg_rating: decodedToken.user.avg_rating,
       },
       expires: parseInt(decodedToken.exp),
     };

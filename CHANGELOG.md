@@ -1,3 +1,17 @@
+## [0.12.0] - 30-09-2025
+
+### Added
+
+- Event deletion endpoint.
+- User rating.
+- User rating endpoint.
+
+## [0.11.0] - 28-09-2025
+
+### Added
+
+- Migrated over the email verification and password reset routes.
+
 ## [0.10.1] - 28-09-2025
 
 ### Changed

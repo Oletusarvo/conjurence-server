@@ -6,6 +6,7 @@ type Tables =
   | 'user_contact'
   | 'user_contact_type'
   | 'user_subscription'
+  | 'user_rating'
   | 'event_data'
   | 'event'
   | 'event_category'
@@ -28,6 +29,7 @@ export const tablenames = {
   user_contact: getFullTableName('users', 'user_contact'),
   user_contact_type: getFullTableName('users', 'user_contact_type'),
   user_subscription: getFullTableName('users', 'user_subscription'),
+  user_rating: getFullTableName('users', 'user_rating'),
   event_instance: getFullTableName('events', 'event'),
   event_category: getFullTableName('events', 'event_category'),
   event_category_description: getFullTableName('events', 'event_category_description'),

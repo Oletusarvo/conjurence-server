@@ -174,6 +174,10 @@ export class EventRepository extends EventMetaRepository {
 
     return newEventRecord;
   }
+
+  async deleteById(eventId: string, ctx: DBContext) {
+    await ctx(tablenames.event_instance).where({ id: eventId }).del();
+  }
 }
 
 export class TestEventRepository extends EventRepository {

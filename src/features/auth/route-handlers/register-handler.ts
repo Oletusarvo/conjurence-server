@@ -3,14 +3,23 @@ import { ExpressRequest, ExpressResponse } from '../../../express-server-types';
 import { authRepository } from '../repos/auth-repository';
 import { registerCredentialsSchema } from '../schemas/register-credentials-schema';
 import db from '../../../../dbconfig';
+import { verifyJWT } from '../util/verify-jwt';
+import { tryCatch } from '../../../util/try-catch';
 
 export async function registerHandler(req: ExpressRequest, res: ExpressResponse) {
   try {
-    const credentials = req.body;
+    const { token, ...credentials } = req.body;
+    const { value, error } = await tryCatch(() => verifyJWT(token) as { email: string });
+
+    if (error) {
+      return res.status(401).end();
+    }
+
     if (!credentials) {
       return res.status(400).send('Credentials missing from request!');
     }
 
+    credentials.email = value.email;
     const parseResult = registerCredentialsSchema.safeParse(credentials);
     if (!parseResult.success) {
       return res.status(400).send(z.treeifyError(parseResult.error));

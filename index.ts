@@ -32,7 +32,7 @@ app.use(
         return callback(new Error(`Origin ${origin} blocked by CORS!`));
       }
     },
-    methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'PUT'],
+    methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'PUT', 'DELETE'],
     credentials: true,
   })
 );

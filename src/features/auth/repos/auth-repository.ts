@@ -21,6 +21,7 @@ export class AuthRepository extends Repository {
 
   async findUserByEmail(email: string, ctx: DBContext) {
     return await ctx({ user: tablenames.user })
+      .with('user_rating_sum', ctx.sum('rating as total').from(tablenames.user_rating))
       .where({ email })
       .join(
         ctx
@@ -31,7 +32,26 @@ export class AuthRepository extends Repository {
         'user_status.id',
         'user.user_status_id'
       )
-      .select('user.id', 'email', 'username', 'user_status.label as status')
+      .leftJoin(
+        ctx
+          .select('user_id')
+          .count('* as count')
+          .from(tablenames.user_rating)
+          .groupBy('user_id')
+          .as('user_rating_qty'),
+        'user_rating_qty.user_id',
+        'user.id'
+      )
+
+      .select(
+        'user.id',
+        'email',
+        'username',
+        'user_status.label as status',
+        ctx.raw(
+          'CAST((SELECT total FROM user_rating_sum LIMIT 1) / COALESCE(user_rating_qty.count, 1) AS INTEGER) as avg_rating'
+        )
+      )
       .first();
   }
 

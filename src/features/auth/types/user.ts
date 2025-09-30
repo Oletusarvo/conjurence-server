@@ -5,4 +5,5 @@ export type TUser = {
   status: string;
   attended_event_id: string;
   subscription: any;
+  avg_rating: number;
 };

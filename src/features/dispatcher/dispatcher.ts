@@ -26,6 +26,12 @@ type TMessage = { to?: string } & (
       message: 'event:new';
       payload: null;
     }
+  | {
+      message: 'event:end';
+      payload: {
+        eventId: string;
+      };
+    }
 );
 
 class Dispatcher {
