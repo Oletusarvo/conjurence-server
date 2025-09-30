@@ -12,7 +12,7 @@ export async function sendVerificationEmailHandler(req: ExpressRequest, res: Exp
 
     const user = await authService.repo.findUserByEmail(email, db);
     if (user) {
-      //return res.status(409).end();
+      return res.status(409).end();
     }
 
     const token = createJWT(

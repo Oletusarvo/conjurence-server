@@ -8,5 +8,6 @@ export const registerCredentialsSchema = z
     password1: passwordSchema,
     password2: passwordSchema,
     subscription: z.enum(['free', 'premium']).default('free'),
+    tosAccepted: z.string().transform(val => val === 'on').pipe(z.boolean())
   })
   .refine(val => val.password1 === val.password2, 'auth:password_mismatch');

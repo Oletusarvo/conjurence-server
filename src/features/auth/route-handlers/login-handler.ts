@@ -67,7 +67,6 @@ export async function postHandler(req: ExpressRequest, res: ExpressResponse) {
       } satisfies TUser,
     };
 
-    console.log(session);
     const token = createJWT(session, {
       expiresIn: '1h',
     });
