@@ -10,7 +10,7 @@ export default async function getAttendanceForEventHandler(
   try {
     const { eventId } = req.params;
     const attendants = await attendanceService.repo.findByEventInstanceId(eventId, db);
-    console.log(attendants);
+
     return res.status(200).json(attendants);
   } catch (err: any) {
     console.log(err.message);

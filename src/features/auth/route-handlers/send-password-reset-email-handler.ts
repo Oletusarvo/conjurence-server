@@ -10,14 +10,11 @@ export default async function sendPasswordResetEmailHandler(
   res: ExpressResponse
 ) {
   try {
-    const { to } = req.body;
-    const userRecord = await db(tablenames.user)
-      .where({ email: to })
-      .select('id', 'username')
-      .first();
+    const { email } = req.body;
+    const userRecord = await db(tablenames.user).where({ email }).select('id', 'username').first();
     const token = createJWT({ user_id: userRecord.id }, { expiresIn: '1h' });
     await sendEmail({
-      to,
+      to: email,
       subject: `Reset Your ${packageName} password`,
       html: `
       <h1>Reset Your ${packageName} Password</h1>

@@ -12,7 +12,7 @@ import { eventTemplateService } from '../services/event-template-service';
 export default async function postHandler(req: AuthenticatedUserRequest, res: ExpressResponse) {
   const session = req.session;
   const parseResult = createEventSchema.safeParse(req.body);
-  console.log('Req body', req.body);
+
   if (!parseResult.success) {
     return res.status(400).send(z.treeifyError(parseResult.error));
   }

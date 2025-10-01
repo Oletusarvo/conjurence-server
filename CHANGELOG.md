@@ -6,6 +6,10 @@
 - User rating.
 - User rating endpoint.
 
+### Changed
+
+- The name of the email variable on the /auth/reset-password/verify endpoint from "to" to "email".
+
 ## [0.11.0] - 28-09-2025
 
 ### Added
