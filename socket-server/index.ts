@@ -5,8 +5,6 @@ import leaveRoomHandler from './lib/leave-room-handler';
 
 export const socketServer = (io: Server) => {
   io.on('connection', socket => {
-    console.log('New connection: ', socket.id);
-
     socket.on('join_room', async roomName => await joinRoomHandler(io, socket, roomName));
 
     socket.on('leave_room', roomName => leaveRoomHandler(io, socket, roomName));

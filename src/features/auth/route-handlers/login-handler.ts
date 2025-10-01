@@ -11,21 +11,6 @@ import { attendanceService } from '../../attendance/services/attendance-service'
 import { TUser } from '../types/user';
 import { authConfig } from '../auth.config';
 
-export async function getHandler(req: ExpressRequest, res: ExpressResponse) {
-  try {
-    const token = createJWT(
-      { user_id: 'test' },
-      {
-        expiresIn: '60min',
-      }
-    );
-
-    return res.status(200).send(token);
-  } catch (err: any) {
-    return res.status(500).send('An unexpected error occured!');
-  }
-}
-
 export async function postHandler(req: ExpressRequest, res: ExpressResponse) {
   try {
     const credentials = req.body;

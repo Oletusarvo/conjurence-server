@@ -1,6 +1,6 @@
 import { getRouter } from '../../../util/get-router';
 import { getSessionHandler } from '../route-handlers/get-session-handler';
-import { getHandler, postHandler } from '../route-handlers/login-handler';
+import { postHandler } from '../route-handlers/login-handler';
 import { logoutHandler } from '../route-handlers/logout-handler';
 import { patchSessionHandler } from '../route-handlers/patch-session.handler';
 import { registerHandler } from '../route-handlers/register-handler';
@@ -10,7 +10,6 @@ import { sendVerificationEmailHandler } from '../route-handlers/send-verificatio
 import { checkAuth } from '../util/check-auth';
 
 const router = getRouter();
-router.get('/login', getHandler);
 router.post('/login', postHandler);
 router.post('/register', registerHandler);
 router.post('/reset-password/verify', sendPasswordResetEmailHandler);
