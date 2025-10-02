@@ -32,7 +32,8 @@ export async function sendVerificationEmailHandler(req: ExpressRequest, res: Exp
       <p>
         It seems you have requested to sign up to <a href="${process.env.DOMAIN_URL}"><strong>${packageName}.</strong></a><br/>
         If it was not you who signed up, you can safely ignore this message.<br/><br/>
-        Otherwise please click <a href="${process.env.DOMAIN_URL}/register?token=${token}">this link</a> to continue the registration process.
+        Otherwise please click <a href="${process.env.DOMAIN_URL}/register?token=${token}">this link</a> to continue the registration process.<br/>
+        Please note that the link will open the app directly, so it has to be installed beforehand.
         <br/><br/>
         Best regards, the ${packageName} team.
       </p>
