@@ -13,6 +13,7 @@ export default async function sendPasswordResetEmailHandler(
     const { email } = req.body;
     const userRecord = await db(tablenames.user).where({ email }).select('id', 'username').first();
     const token = createJWT({ user_id: userRecord.id }, { expiresIn: '1h' });
+    console.log('Sending verification token', token);
     await sendEmail({
       to: email,
       subject: `Reset Your ${packageName} password`,
