@@ -1,3 +1,9 @@
+## [0.13.0] - 02-10-2025
+
+### Changed
+
+- Sending emails using brevos api instead of smtp and nodemailer.
+
 ## [0.12.0] - 02-01-2025
 
 ### Added

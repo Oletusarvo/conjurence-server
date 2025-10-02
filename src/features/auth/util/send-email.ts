@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { transport } from '../../../nodemailer.config';
 
 require('dotenv').config();
@@ -11,16 +12,27 @@ export async function sendEmail({
   subject: string;
   html: string;
 }) {
-  console.log(
-    'Sending email; using these credentials: ',
-    process.env.SMTP_EMAIL,
-    process.env.SMTP_PASSWORD,
-    process.env.SERVICE_EMAIL
+  const res = await axios.post(
+    'https://api.brevo.com/v3/smtp/email',
+    {
+      sender: { email: process.env.SERVICE_EMAIL, name: 'Conjurence App' },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    },
+    {
+      headers: {
+        'api-key': process.env.EMAIL_API_KEY.trim(),
+        'Content-Type': 'application/json',
+      },
+    }
   );
+
+  /*
   const result = await transport.sendMail({
     from: process.env.SERVICE_EMAIL,
     to,
     subject,
     html,
-  });
+  });*/
 }
