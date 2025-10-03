@@ -25,7 +25,7 @@ export class EventRepository extends EventMetaRepository {
 
     const q = ctx({ event: tablenames.event_instance })
       .join(positionSubquery, 'position.event_id', 'event.id')
-      .join(hostUserSubQuery, 'host.event_instance_id', 'event.id')
+      .leftJoin(hostUserSubQuery, 'host.event_instance_id', 'event.id')
       .leftJoin(participantCountSubquery, 'participant_count.event_instance_id', 'event.id')
       .leftJoin(presentCountSubquery, 'present_count.event_instance_id', 'event.id')
       .leftJoin(thresholdsQuery, 'event_threshold.threshold_id', 'event.event_threshold_id')
@@ -111,7 +111,16 @@ export class EventRepository extends EventMetaRepository {
 `,
         [longitude, latitude, distance]
       )
-      .where({ ended_at: null });
+      .where(function () {
+        this.where({ author_id: null }).where(
+          'created_at',
+          '>',
+          ctx.raw("NOW() - INTERVAL '60 minutes'")
+        );
+      })
+      .orWhere(function () {
+        this.whereNotNull('author_id').andWhere({ ended_at: null });
+      });
 
     return await base;
   }
