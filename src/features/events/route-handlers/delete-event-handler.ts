@@ -19,11 +19,13 @@ export default async function deleteEventHandler(
       return res.status(409).end();
     }
     await eventService.repo.deleteById(eventId, db);
+
     dispatcher.dispatch({
       message: 'event:end',
       to: `event:${eventId}`,
       payload: { eventId },
     });
+
     return res.status(200).end();
   } catch (err: any) {
     console.log(err.message);

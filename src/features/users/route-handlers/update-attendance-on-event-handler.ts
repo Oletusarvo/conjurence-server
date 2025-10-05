@@ -28,14 +28,16 @@ export async function updateAttendanceOnEventHandler(
       db
     );
 
+    const payload = {
+      username: updatedAttendanceRecord.username,
+      eventId,
+      updatedAttendanceRecord,
+    };
+
     dispatcher.dispatch({
       to: `event:${eventId}`,
       message: 'event:attendance_update',
-      payload: {
-        username: updatedAttendanceRecord.username,
-        eventId,
-        updatedAttendanceRecord,
-      },
+      payload,
     });
 
     return res.status(200).json(updatedAttendanceRecord);

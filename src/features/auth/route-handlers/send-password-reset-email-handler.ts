@@ -12,6 +12,9 @@ export default async function sendPasswordResetEmailHandler(
   try {
     const { email } = req.body;
     const userRecord = await db(tablenames.user).where({ email }).select('id', 'username').first();
+    if (!userRecord) {
+      return res.status(404).end();
+    }
     const token = createJWT({ user_id: userRecord.id }, { expiresIn: '1h' });
 
     await sendEmail({

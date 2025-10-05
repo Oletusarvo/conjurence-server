@@ -1,3 +1,9 @@
+## [0.13.1] - 05-10-2025
+
+### Added
+
+- A 404 response from the password-reset verification route when an account with a given email does not exist.
+
 ## [0.13.0] - 02-10-2025
 
 ### Changed
