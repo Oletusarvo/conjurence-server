@@ -1,15 +1,13 @@
 import db from '../../../../dbconfig';
 import { ExpressRequest, ExpressResponse } from '../../../express-server-types';
 import { tablenames } from '../../../tablenames';
+import { createHandler } from '../../../util/create-handler';
 import { attendanceService } from '../../attendance/services/attendance-service';
 import { AuthenticatedUserRequest } from '../../auth/types/authenticated-user';
 import { dispatcher } from '../../dispatcher/dispatcher';
 
-export async function updateAttendanceOnEventHandler(
-  req: AuthenticatedUserRequest,
-  res: ExpressResponse
-) {
-  try {
+export const updateAttendanceOnEventHandler = createHandler(
+  async (req: AuthenticatedUserRequest, res: ExpressResponse) => {
     const session = req.session;
     const { eventId } = req.params;
 
@@ -41,8 +39,5 @@ export async function updateAttendanceOnEventHandler(
     });
 
     return res.status(200).json(updatedAttendanceRecord);
-  } catch (err: any) {
-    console.log(err.message);
-    return res.status(500).end();
   }
-}
+);

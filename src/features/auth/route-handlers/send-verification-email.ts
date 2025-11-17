@@ -1,13 +1,14 @@
 import db from '../../../../dbconfig';
 import { ExpressRequest, ExpressResponse } from '../../../express-server-types';
+import { createHandler } from '../../../util/create-handler';
 import { authService } from '../services/auth-service';
 import { createJWT } from '../util/create-jwt';
 import { sendEmail } from '../util/send-email';
 
 const packageName = 'Conjurence';
 
-export async function sendVerificationEmailHandler(req: ExpressRequest, res: ExpressResponse) {
-  try {
+export const sendVerificationEmailHandler = createHandler(
+  async (req: ExpressRequest, res: ExpressResponse) => {
     const { email } = req.body;
 
     const user = await authService.repo.findUserByEmail(email, db);
@@ -40,8 +41,5 @@ export async function sendVerificationEmailHandler(req: ExpressRequest, res: Exp
     `,
     });
     return res.status(200).end();
-  } catch (err) {
-    console.log('send-email-verification-handler: ', err.message);
-    return res.status(500).end();
   }
-}
+);

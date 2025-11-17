@@ -1,29 +1,27 @@
 import z from 'zod';
-import { eventSizeSchema } from './event-size-schema';
-import { EventError } from '../errors/events';
-import { eventCategorySchema } from './event-category-schema';
+
+const positionSchema = z.object({
+  coordinates: z.array(z.number()).length(2, 'position:invalid_length'),
+  accuracy: z.number(),
+  timestamp: z.number(),
+});
+
+const spotsSchema = z.number().min(1);
 
 export const createEventSchema = z.object({
-  title: z.string().min(3, EventError.titleTooShort).max(32, EventError.titleTooLong).trim(),
-  description: z.string().max(256).trim(),
-
   spots_available: z
     .string()
-    .optional()
     .transform(val => Number(val))
-    .pipe(z.number().min(1)),
+    .pipe(spotsSchema)
+    .or(spotsSchema)
+    .optional(),
 
-  category: z.string(),
-  position: z
-    .string()
-    .transform(val => JSON.parse(val))
-    .pipe(
-      z.object({
-        coordinates: z.array(z.number()).length(2, 'position:invalid_length'),
-        accuracy: z.number(),
-        timestamp: z.number(),
-      })
-    ),
+  position: positionSchema.or(
+    z
+      .string()
+      .transform(val => JSON.parse(val))
+      .pipe(positionSchema)
+  ),
 
   size: z.string(),
   is_mobile: z
@@ -32,11 +30,7 @@ export const createEventSchema = z.object({
     .pipe(z.boolean().default(false))
     .optional(),
 
-  is_template: z
-    .string()
-    .transform(val => val === 'on')
-    .pipe(z.boolean().default(false))
-    .optional(),
+  activity_id: z.uuid(),
 });
 
 export const updateEventSchema = createEventSchema

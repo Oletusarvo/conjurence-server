@@ -6,12 +6,10 @@ import { AuthenticatedUserRequest } from '../../auth/types/authenticated-user';
 import { eventService } from '../../events/services/event-service';
 import { dispatcher } from '../../dispatcher/dispatcher';
 import { attendanceService } from '../../attendance/services/attendance-service';
+import { createHandler } from '../../../util/create-handler';
 
-export default async function createAttendanceOnEventHandler(
-  req: AuthenticatedUserRequest,
-  res: ExpressResponse
-) {
-  try {
+export const createAttendanceOnEventHandler = createHandler(
+  async (req: AuthenticatedUserRequest, res: ExpressResponse) => {
     const session = req.session;
     const payload = req.body;
     const currentAttendanceRecord = await attendanceService.repo
@@ -46,8 +44,5 @@ export default async function createAttendanceOnEventHandler(
     });
 
     return res.status(200).json(newAttendanceRecord);
-  } catch (err: any) {
-    console.log(err.message);
-    return res.status(500).end();
   }
-}
+);

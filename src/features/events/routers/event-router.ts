@@ -1,18 +1,21 @@
 import { getRouter } from '../../../util/get-router';
 import { checkAuth } from '../../auth/util/check-auth';
-import deleteEventHandler from '../route-handlers/delete-event-handler';
-import endEventHandler from '../route-handlers/end-event-handler';
-import getAttendanceForEventHandler from '../route-handlers/get-attendance-for-event-handler';
-import getHandler from '../route-handlers/get-handler';
-import getNearbyHandler from '../route-handlers/get-nearby-handler';
-import postHandler from '../route-handlers/post-handler';
+import { createEventHandler } from '../route-handlers/create-event-handler';
+import { deleteEventHandler } from '../route-handlers/delete-event-handler';
+import { endEventHandler } from '../route-handlers/end-event-handler';
+import { getAttendanceForEventHandler } from '../route-handlers/get-attendance-for-event-handler';
+import { getEventByIdHandler } from '../route-handlers/get-event-by-id-handler';
+import { getNearbyEventsHandler } from '../route-handlers/get-nearby-events-handler';
+
+import { rateEventHandler } from '../route-handlers/rate-event-handler';
 
 const router = getRouter();
-router.get('/get-nearby', checkAuth, getNearbyHandler);
+router.get('/get-nearby', checkAuth, getNearbyEventsHandler);
 router.put('/:eventId/end', checkAuth, endEventHandler);
 router.get('/:eventId/attendance', checkAuth, getAttendanceForEventHandler);
-router.get('/:eventId', checkAuth, getHandler);
+router.get('/:eventId', checkAuth, getEventByIdHandler);
 router.delete('/:eventId', checkAuth, deleteEventHandler);
-router.post('/', checkAuth, postHandler);
+router.post('/', checkAuth, createEventHandler);
+router.post('/:eventId/rating', checkAuth, rateEventHandler);
 
 export { router as eventRouter };

@@ -9,9 +9,7 @@ export class EventTemplateService extends Service<EventTemplateRepository> {
   }
 
   async findTemplateById(templateId: string, session: any, ctx: DBContext) {
-    const [author_id] = await ctx(tablenames.event_template)
-      .where({ id: templateId })
-      .pluck('author_id');
+    const [author_id] = await ctx(tablenames.activity).where({ id: templateId }).pluck('author_id');
     if (author_id !== session.user.id) {
       throw new Error('Only the author of a template can use it!');
     }

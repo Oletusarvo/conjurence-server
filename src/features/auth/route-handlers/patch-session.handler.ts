@@ -1,10 +1,11 @@
 import { ExpressRequest, ExpressResponse } from '../../../express-server-types';
+import { createHandler } from '../../../util/create-handler';
 import { authConfig } from '../auth.config';
 import { AuthenticatedUserRequest } from '../types/authenticated-user';
 import { createJWT } from '../util/create-jwt';
 
-export async function patchSessionHandler(req: AuthenticatedUserRequest, res: ExpressResponse) {
-  try {
+export const patchSessionHandler = createHandler(
+  async (req: AuthenticatedUserRequest, res: ExpressResponse) => {
     const sessionUpdate = req.body;
     const newSession = {
       ...req.session,
@@ -21,8 +22,5 @@ export async function patchSessionHandler(req: AuthenticatedUserRequest, res: Ex
         token,
         session: newSession,
       });
-  } catch (err: any) {
-    console.log(err.message);
-    return res.status(500).end();
   }
-}
+);

@@ -29,28 +29,36 @@ export class EventRepository extends EventMetaRepository {
       .leftJoin(participantCountSubquery, 'participant_count.event_instance_id', 'event.id')
       .leftJoin(presentCountSubquery, 'present_count.event_instance_id', 'event.id')
       .leftJoin(thresholdsQuery, 'event_threshold.threshold_id', 'event.event_threshold_id')
-      .join(eventCategorySubquery, 'category.category_id_actual', 'event.event_category_id')
+      .join(
+        ctx
+          .select('id', 'title', 'description', 'event_category_id')
+          .from(tablenames.activity)
+          .as('activity'),
+        'activity.id',
+        'event.activity_id'
+      )
+      .join(eventCategorySubquery, 'category.category_id_actual', 'activity.event_category_id')
       .select(
         'event.author_id',
-        'event.title',
-        'event.description',
         'event.id as id',
-        'category.category',
         'event.created_at',
         'event.ended_at',
         'event.spots_available',
         'host.username as host',
-        'event_threshold.auto_join_threshold',
-        'event_threshold.auto_leave_threshold',
-        'event_threshold.size',
         'event.is_mobile',
-        ctx.raw(
-          "JSON_BUILD_OBJECT('coordinates', ST_AsGeoJSON(coordinates)::json -> 'coordinates', 'accuracy', accuracy, 'timestamp', timestamp) AS position"
-        ),
         ctx.raw(
           'COALESCE(CAST(participant_count.interested_count AS INTEGER), 0) AS interested_count'
         ),
-        ctx.raw('COALESCE(CAST(present_count.attendance_count AS INTEGER), 0) AS attendance_count')
+        ctx.raw('COALESCE(CAST(present_count.attendance_count AS INTEGER), 0) AS attendance_count'),
+        ctx.raw(
+          "JSON_BUILD_OBJECT('auto_join_threshold', auto_join_threshold, 'auto_leave_threshold', auto_leave_threshold, 'type', size) as size"
+        ),
+        ctx.raw(
+          "JSON_BUILD_OBJECT('title', activity.title, 'description', activity.description, 'type', category.category) as activity"
+        ),
+        ctx.raw(
+          "JSON_BUILD_OBJECT('coordinates', ST_AsGeoJSON(coordinates)::json -> 'coordinates', 'accuracy', accuracy, 'timestamp', timestamp) AS position"
+        )
       );
 
     return q;
@@ -155,8 +163,6 @@ export class EventRepository extends EventMetaRepository {
     const { position, ...data } = payload;
     const [newEventRecord] = await ctx(tablenames.event_instance).insert(
       {
-        title: data.title,
-        description: data.description,
         spots_available: data.spots_available,
         is_mobile: data.is_mobile,
         event_threshold_id: ctx
@@ -164,12 +170,8 @@ export class EventRepository extends EventMetaRepository {
           .from(tablenames.event_threshold)
           .where({ label: data.size })
           .limit(1),
-        event_category_id: ctx
-          .select('id')
-          .from(tablenames.event_category)
-          .where({ label: data.category })
-          .limit(1),
         author_id: data.author_id,
+        activity_id: data.activity_id,
       },
       ['id']
     );

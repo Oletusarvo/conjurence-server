@@ -12,7 +12,6 @@ export default async function verifyRating(
   try {
     const session = req.session;
     const { userId } = req.params;
-    console.log(req.body.rating);
     const ratingUserAttendance = await attendanceService.repo.findRecentActiveByUserId(
       session.user.id,
       db

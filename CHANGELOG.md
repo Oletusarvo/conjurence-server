@@ -1,3 +1,13 @@
+## [1.0.0] - 17-11-2025
+
+### Added
+
+- The createHandler utility function that handles catching errors thrown by a provided handler, and returning a 500-response automatically.
+
+### Changed
+
+- Event templates are now "activities", and each event references an activity by id; events themselves no longer have a title or a description.
+
 ## [0.13.1] - 05-10-2025
 
 ### Added

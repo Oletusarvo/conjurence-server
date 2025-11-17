@@ -1,15 +1,13 @@
 import db from '../../../../dbconfig';
 import { ExpressRequest, ExpressResponse } from '../../../express-server-types';
 import { tablenames } from '../../../tablenames';
+import { createHandler } from '../../../util/create-handler';
 import { createJWT } from '../util/create-jwt';
 import { sendEmail } from '../util/send-email';
 const packageName = 'Conjurence';
 
-export default async function sendPasswordResetEmailHandler(
-  req: ExpressRequest,
-  res: ExpressResponse
-) {
-  try {
+export const sendPasswordResetEmailHandler = createHandler(
+  async (req: ExpressRequest, res: ExpressResponse) => {
     const { email } = req.body;
     const userRecord = await db(tablenames.user).where({ email }).select('id', 'username').first();
     if (!userRecord) {
@@ -33,8 +31,5 @@ export default async function sendPasswordResetEmailHandler(
     `,
     });
     return res.status(200).end();
-  } catch (err) {
-    console.log(err.message);
-    return res.status(500).end();
   }
-}
+);
