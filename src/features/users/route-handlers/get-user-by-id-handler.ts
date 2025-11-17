@@ -4,6 +4,7 @@ import { tablenames } from '../../../tablenames';
 import { createHandler } from '../../../util/create-handler';
 import { AuthenticatedUserRequest } from '../../auth/types/authenticated-user';
 
+/**Returns a user by their id. */
 export const getUserByIdHandler = createHandler(
   async (req: AuthenticatedUserRequest, res: ExpressResponse) => {
     const { userId } = req.params;

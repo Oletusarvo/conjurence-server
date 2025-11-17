@@ -1,5 +1,5 @@
 import { getRouter } from '../../../util/get-router';
-import { checkAuth } from '../../auth/util/check-auth';
+import { checkAuth } from '../../auth/middleware/check-auth';
 import { createEventHandler } from '../route-handlers/create-event-handler';
 import { deleteEventHandler } from '../route-handlers/delete-event-handler';
 import { endEventHandler } from '../route-handlers/end-event-handler';

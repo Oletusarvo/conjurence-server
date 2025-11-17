@@ -1,6 +1,6 @@
 import { getRouter } from '../../../util/get-router';
 import verifyRating from '../middleware/verify-rating';
-import { checkAuth } from '../../auth/util/check-auth';
+import { checkAuth } from '../../auth/middleware/check-auth';
 
 import { getActiveAttendanceHandler } from '../route-handlers/get-active-attendance-handler';
 

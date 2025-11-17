@@ -4,7 +4,6 @@ import { AuthenticatedUserRequest } from '../../auth/types/authenticated-user';
 import db from '../../../../dbconfig';
 import { tablenames } from '../../../tablenames';
 import { activitySchema } from '../../events/schemas/activity-schema';
-import { eventTemplateService } from '../../events/services/event-template-service';
 import { createHandler } from '../../../util/create-handler';
 
 export const createActivityHandler = createHandler(
@@ -16,13 +15,17 @@ export const createActivityHandler = createHandler(
 
     const session = req.session;
     const data = parseResult.data;
-    await eventTemplateService.repo.create(
-      {
-        ...data,
-        author_id: session.user.id,
-      },
-      db
-    );
+
+    await db(tablenames.activity).insert({
+      title: data.title,
+      description: data.description,
+      author_id: session.user.id,
+      event_category_id: db
+        .select('id')
+        .from(tablenames.event_category)
+        .where({ label: data.category })
+        .limit(1),
+    });
 
     return res.status(200).end();
   }

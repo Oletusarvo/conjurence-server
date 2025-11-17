@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { verifyJWT } from './verify-jwt';
+import { verifyJWT } from '../util/verify-jwt';
 import { AuthenticatedUserRequest } from '../types/authenticated-user';
 import { ExpressRequest, ExpressResponse } from '../../../express-server-types';
 import { tryCatch } from '../../../util/try-catch';
