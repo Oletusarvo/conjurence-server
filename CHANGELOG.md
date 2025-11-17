@@ -7,6 +7,7 @@
 ### Changed
 
 - Event templates are now "activities", and each event references an activity by id; events themselves no longer have a title or a description.
+- registerCredentialsSchema now contains the token, and is used to validate the body of a request made to the registerHandler.
 
 ## [0.13.1] - 05-10-2025
 

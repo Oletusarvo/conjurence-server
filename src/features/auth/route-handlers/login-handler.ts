@@ -8,50 +8,47 @@ import { tablenames } from '../../../tablenames';
 import { attendanceService } from '../../attendance/services/attendance-service';
 import { TUser } from '../types/user';
 import { createHandler } from '../../../util/create-handler';
+import { createHandlerWithSchemaValidation } from '../../../util/create-handler-with-schema-validation';
 
-export const loginHandler = createHandler(async (req: ExpressRequest, res: ExpressResponse) => {
-  const credentials = req.body;
-  if (!credentials) return res.status(400).send('Credentials missing from request!');
+export const loginHandler = createHandlerWithSchemaValidation(
+  loginCredentialsSchema,
+  async (req: ExpressRequest, res: ExpressResponse, data) => {
+    const { email, password } = data;
 
-  const parseResult = loginCredentialsSchema.safeParse(credentials);
-  if (!parseResult.success) {
-    return res.status(400).json(z.flattenError(parseResult.error));
+    const user = await authService.repo.findUserByEmail(email, db);
+    if (!user) {
+      return res.status(401).end();
+    }
+    const passwordOk = await authService.verifyPasswordByEmail(email, password, db);
+
+    if (!passwordOk) {
+      return res.status(401).send();
+    }
+
+    const pr = await attendanceService.repo.findRecentActiveByUserId(user.id, db);
+    const subscriptionRecord = await db(tablenames.user_subscription)
+      .where({
+        id: db.select('user_subscription_id').from(tablenames.user).where({ id: user.id }).limit(1),
+      })
+      .select('allow_templates', 'allow_mobile_events', 'maximum_event_size_id')
+      .first();
+
+    const session = {
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        status: user.status,
+        attended_event_id: pr?.event_instance_id || null,
+        subscription: subscriptionRecord,
+        avg_rating: user.avg_rating,
+      } satisfies TUser,
+    };
+
+    const token = createJWT(session, {
+      expiresIn: '1h',
+    });
+
+    return res.status(200).json({ token });
   }
-  const { email, password } = parseResult.data;
-
-  const user = await authService.repo.findUserByEmail(email, db);
-  if (!user) {
-    return res.status(401).end();
-  }
-  const passwordOk = await authService.verifyPasswordByEmail(email, password, db);
-
-  if (!passwordOk) {
-    return res.status(401).send();
-  }
-
-  const pr = await attendanceService.repo.findRecentActiveByUserId(user.id, db);
-  const subscriptionRecord = await db(tablenames.user_subscription)
-    .where({
-      id: db.select('user_subscription_id').from(tablenames.user).where({ id: user.id }).limit(1),
-    })
-    .select('allow_templates', 'allow_mobile_events', 'maximum_event_size_id')
-    .first();
-
-  const session = {
-    user: {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      status: user.status,
-      attended_event_id: pr?.event_instance_id || null,
-      subscription: subscriptionRecord,
-      avg_rating: user.avg_rating,
-    } satisfies TUser,
-  };
-
-  const token = createJWT(session, {
-    expiresIn: '1h',
-  });
-
-  return res.status(200).json({ token });
-});
+);
